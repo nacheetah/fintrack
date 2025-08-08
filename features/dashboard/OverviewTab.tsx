@@ -9,43 +9,49 @@ import Card from "@/components/ui/Card";
 import { useData } from "@/context/DataContext";
 import { getBadgeType } from "@/utils/getBadgeType";
 
-export default function OverviewTab() {
-  //   interface DashboardSummary {
-  //     totalBalance: number;
-  //     totalCredits: number;
-  //     totalDebits: number;
-  //     transactionCount: number;
-  //     balanceChange: number;
-  //     creditsChange: number;
-  //     debitsChange: number;
-  //     transactionChange: number;
-  //   }
-  //   const dashboardSummary:DashboardSummary[] = [
-  //     {totalBalance: 12650;
-  //     totalCredits: 899;
-  //     totalDebits: 900;
-  //     transactionCount: number;
-  //     balanceChange: number;
-  //     creditsChange: number;
-  //     debitsChange: number;
-  //     transactionChange: number;}
-  //   ]
+interface DashboardSummary {
+  totalBalance: number;
+  totalCredits: number;
+  totalDebits: number;
+  transactionCount: number;
+  balanceChange: number;
+  creditsChange: number;
+  debitsChange: number;
+  transactionChange: number;
+}
 
-  interface Transaction {
-    id: string;
-    date: string;
-    remark: string;
-    amount: number;
-    currency: string;
-    type: "Credit" | "Debit";
-  }
+export default function OverviewTab() {
+  const summary = [
+    { title: "Total Balance", totalBalance: 12650, balanceChange: 2 },
+    { title: "Total Credits", totalBalance: 7890, balanceChange: 3 },
+    { title: "Total Debits", totalBalance: 4455, balanceChange: -2 },
+    { title: "Transactions", totalBalance: 150, balanceChange: 10 },
+  ];
 
   const { transactionList, filterFunction } = useData();
+
+  const formatNumber = new Intl.NumberFormat("en-US");
+
   return (
     <div className='pt-7'>
       <h4 className='text-[20px] leading-6 font-bold pt-3 pb-4.5'>Summary</h4>
-      <div className='pb-3'>
-        <Card title='Total Balance' amount='$1500' percentage='+2%'></Card>
+      <div className='pb-3 flex items-center'>
+        {summary.map((card, index) => (
+          <div
+            className={`${index == summary.length - 1 ? "mr-0" : "mr-7"}`}
+            key={index}
+          >
+            <Card
+              title={card.title}
+              amount={`${
+                card.title !== "Transactions" ? "$" : ""
+              }${formatNumber.format(card.totalBalance)}`}
+              percentage={`${card.balanceChange > 0 ? "+" : ""}${
+                card.balanceChange
+              }%`}
+            ></Card>
+          </div>
+        ))}
       </div>
       <TableWrapper customClass='my-7'>
         <TableRow>
